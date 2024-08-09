@@ -1,0 +1,95 @@
+name: 'Buildkit build and push image'
+description: 'Build docker image using buildkits buildctl'
+author: 'Robert Ruf'
+branding:
+  icon: 'bold'
+  color: 'yellow'
+inputs:
+  # ----- buildctl global -----
+  # Boolean: 'true' or 'false'
+  debug:
+    description: 'Enable debug output in logs'
+    required: false
+    default: 'false'
+  # String
+  addr:
+    description: 'Buildkitd address'
+    required: true
+  # String
+  log-format:
+    description: 'Log formatter: json or text'
+    required: false
+    default: ''
+  # String
+  tlsdir:
+    description: 'Directory containing CA certificate, client certificate, and client key'
+    required: false
+  # ----- build command -----
+  # String
+  output:
+    description: 'Define exports for build result, e.g. --output type=image,name=docker.io/username/image,push=true'
+    required: true
+    default: ''
+  # String
+  progress:
+    description: 'Set type of progress (auto, plain, tty, rawjson). Use plain to show container output'
+    required: false
+    default: ''
+  # String-Array: YAML multiline string as block scalar (literal) using newline block chomping (clip)
+  local:
+    description: "Allow build access to the local directory."
+    required: false
+    default: |
+      context=.
+      dockerfile=.
+  # String
+  frontend:
+    description: 'Define frontend used for build'
+    required: false
+    default: 'dockerfile.v0'
+  # String-Array: YAML multiline string as block scalar (literal) using newline block chomping (clip)
+  opt:
+    description: 'Define custom options for frontend, e.g. --opt target=foo --opt build-arg:foo=bar'
+    required: false
+    default: |
+      filename=Dockerfile
+      platform=linux/amd64
+  # Boolean: 'true' or 'false'
+  no-cache:
+    description: 'Disable cache for all the vertices'
+    required: false
+    default: 'false'
+  # String
+  export-cache:
+    description: 'Export build cache, e.g. --export-cache type=registry,ref=example.com/foo/bar, or --export-cache type=local,dest=path/to/dir'
+    required: false
+    default: ''
+  # String
+  import-cache:
+    description: 'Import build cache, e.g. --import-cache type=registry,ref=example.com/foo/bar, or --import-cache type=local,src=path/to/dir'
+    required: false
+    default: ''
+  # String-Array: YAML multiline string as block scalar (literal) using newline block chomping (clip)
+  secret:
+    description: 'Secret value exposed to the build. Format id=secretname,src=filepath'
+    required: false
+    default: ''
+  # String
+  registry-auth-tlscontext:
+    description: 'Overwrite TLS configuration when authenticating with registries, e.g. --registry-auth-tlscontext host=https://myserver:2376,insecure=false,ca=/path/to/my/ca.crt,cert=/path/to/my/cert.crt,key=/path/to/my/key.crt'
+    required: false
+    default: ''
+  # ----- action ux -----
+  # String-Array: YAML multiline string as block scalar (literal) using newline block chomping (clip)
+  tags:
+    description: 'Image tags extending the tags used with the output command'
+    required: true
+    default: ''
+  # Boolean: 'true' or 'false'
+  dryrun:
+    description: 'Only output the buildctl command but do not actually execute it'
+    required: false
+    default: 'false'
+runs:
+  using: 'node20'
+  main: 'dist/index.js'

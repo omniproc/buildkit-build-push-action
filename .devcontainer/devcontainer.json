@@ -1,0 +1,13 @@
+// For format details, see https://aka.ms/devcontainer.json.
+{
+    "name": "NodeJS",
+    "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+    "customizations": {
+      "vscode": {
+        "extensions": [
+          "github.vscode-github-actions"
+        ]
+      }
+    },
+    "remoteUser": "node"
+  }

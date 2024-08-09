@@ -1,0 +1,49 @@
+name: Tests
+on:
+  push
+
+jobs:
+  least:
+    runs-on: ubuntu-22.04
+    container:
+      image: ghcr.io/omniproc/act-buildkit-runner:1.0.0
+    steps: 
+    - name: oci metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: |
+          ghcr.io/${{ github.repository }}
+        tags: |
+          type=sha,event=branch
+          type=raw,value=latest
+    - name: oci build
+      uses: omniproc/buildkit-build-push-action@main
+      with:
+          dryrun: 'true'
+          tags: ${{ steps.meta.outputs.tags }}
+          addr: 'tcp://buildkitd:1234'
+          output: 'type=image,push=true'
+  cache:
+    runs-on: ubuntu-22.04
+    container:
+      image: ghcr.io/omniproc/act-buildkit-runner:1.0.0
+    steps: 
+    - name: oci metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: |
+          ghcr.io/${{ github.repository }}
+        tags: |
+          type=sha,event=branch
+          type=raw,value=latest
+    - name: oci build
+      uses: omniproc/buildkit-build-push-action@main
+      with:
+          dryrun: 'true'
+          tags: ${{ steps.meta.outputs.tags }}
+          addr: 'tcp://buildkitd:1234'
+          output: 'type=image,push=true'
+          export-cache: 'type=registry,ref=ghcr.io/${{ github.repository }}:buildcache,mode=max,push=true'
+          import-cache: 'type=registry,ref=ghcr.io/${{ github.repository }}:buildcache'
