@@ -1,49 +1,55 @@
 name: Tests
 on:
-  push
+  push:
+  pull_request:
 
 jobs:
-  least:
+  test-dryrun:
     runs-on: ubuntu-22.04
     container:
       image: ghcr.io/omniproc/act-buildkit-runner:1.0.0
-    steps: 
-    - name: oci metadata
-      id: meta
-      uses: docker/metadata-action@v5
-      with:
-        images: |
-          ghcr.io/${{ github.repository }}
-        tags: |
-          type=sha,event=branch
-          type=raw,value=latest
-    - name: oci build
-      uses: omniproc/buildkit-build-push-action@main
-      with:
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: oci metadata
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=sha,event=branch
+            type=raw,value=latest
+
+      - name: Test action (dryrun)
+        uses: ./
+        with:
           dryrun: 'true'
           tags: ${{ steps.meta.outputs.tags }}
           addr: 'tcp://buildkitd:1234'
-          output: 'type=image,push=true'
-  cache:
+          output: 'type=image,push=false'
+
+  test-with-cache:
     runs-on: ubuntu-22.04
     container:
       image: ghcr.io/omniproc/act-buildkit-runner:1.0.0
-    steps: 
-    - name: oci metadata
-      id: meta
-      uses: docker/metadata-action@v5
-      with:
-        images: |
-          ghcr.io/${{ github.repository }}
-        tags: |
-          type=sha,event=branch
-          type=raw,value=latest
-    - name: oci build
-      uses: omniproc/buildkit-build-push-action@main
-      with:
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: oci metadata
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=sha,event=branch
+            type=raw,value=latest
+
+      - name: Test action with cache options (dryrun)
+        uses: ./
+        with:
           dryrun: 'true'
           tags: ${{ steps.meta.outputs.tags }}
           addr: 'tcp://buildkitd:1234'
-          output: 'type=image,push=true'
+          output: 'type=image,push=false'
           export-cache: 'type=registry,ref=ghcr.io/${{ github.repository }}:buildcache,mode=max,push=true'
           import-cache: 'type=registry,ref=ghcr.io/${{ github.repository }}:buildcache'
