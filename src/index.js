@@ -85,7 +85,7 @@ async function run() {
     const args = [`${debug}`, `${addr}`, `${log_format}`, `${tlsdir}`, 'build', `${output}`, `${progress}`, `${local}`, `${frontend}`, `${opt}`, `${no_cache}`, `${export_cache}`, `${import_cache}`, `${secret}`, `${registry_auth_tls_context}`].filter(arg => arg !== '');
 
     // When logging to console print the command as it is actually executed including it's \" escape sequences
-    const _arguments = args.join(' ').replace(/\"/g, '\\\"');
+    const _arguments = args.join(' ').replace(/\\/g, '\\\\').replace(/"/g, '\\"');
 
     if (_dryrun === true) {
       console.log('Dryrun flag set. Command will be logged but not executed.')
