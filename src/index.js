@@ -76,7 +76,7 @@ async function run() {
     const secret = getArrayInput('secret');
     const allow = getArrayInput('allow');
     const ssh = getArrayInput('ssh');
-    const registry_auth_tls_context = getStringInput('registry_auth_tls_context');
+    const registry_auth_tlscontext = getStringInput('registry_auth_tlscontext');
     // ----- action ux -----
     const _tags = core.getMultilineInput('tags', { required: true });
     const _dryrun = core.getBooleanInput('dryrun');
@@ -84,7 +84,7 @@ async function run() {
     // Build the command to be executed
     // Construct the output string based on the output input and optional tags
     const output = `--output ${extendName(_output, _tags)}`;
-    const args = [`${debug}`, `${addr}`, `${log_format}`, `${tlsdir}`, 'build', `${output}`, `${progress}`, `${local}`, `${frontend}`, `${opt}`, `${no_cache}`, `${export_cache}`, `${import_cache}`, `${secret}`, `${allow}`, `${ssh}`, `${registry_auth_tls_context}`].filter(arg => arg !== '');
+    const args = [`${debug}`, `${addr}`, `${log_format}`, `${tlsdir}`, 'build', `${output}`, `${progress}`, `${local}`, `${frontend}`, `${opt}`, `${no_cache}`, `${export_cache}`, `${import_cache}`, `${secret}`, `${allow}`, `${ssh}`, `${registry_auth_tlscontext}`].filter(arg => arg !== '');
 
     // When logging to console print the command as it is actually executed including it's \" escape sequences
     const _arguments = args.join(' ').replace(/\\/g, '\\\\').replace(/"/g, '\\"');
