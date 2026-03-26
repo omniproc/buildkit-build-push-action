@@ -30,8 +30,22 @@ jobs:
 
       - name: Update major version tag
         if: ${{ steps.release.outputs.release_created }}
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+          MAJOR: ${{ steps.release.outputs.major }}
+          SHA: ${{ steps.release.outputs.sha }}
+        shell: bash
         run: |
-          git config user.name github-actions[bot]
-          git config user.email github-actions[bot]@users.noreply.github.com
-          git tag -fa v${{ steps.release.outputs.major }} -m "Update v${{ steps.release.outputs.major }} tag"
-          git push origin v${{ steps.release.outputs.major }} --force
+          set -euo pipefail
+          
+          # Check if tag exists and update or create accordingly
+          if gh api "repos/${{ github.repository }}/git/refs/tags/v${MAJOR}" &>/dev/null; then
+            echo "Updating existing v${MAJOR} tag to ${SHA}"
+            gh api "repos/${{ github.repository }}/git/refs/tags/v${MAJOR}" \
+              -X PATCH -f sha="${SHA}" --silent
+          else
+            echo "Creating new v${MAJOR} tag at ${SHA}"
+            gh api "repos/${{ github.repository }}/git/refs" \
+              -X POST -f ref="refs/tags/v${MAJOR}" -f sha="${SHA}" --silent
+          fi
+          echo "Tag v${MAJOR} now points to ${SHA}"
