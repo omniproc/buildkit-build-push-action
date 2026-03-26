@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.2.0](https://github.com/omniproc/buildkit-build-push-action/compare/v2.1.0...v2.2.0) (2026-03-26)
+
+
+### Features
+
+* update to BuildKit v0.28.1 ([03ba87f](https://github.com/omniproc/buildkit-build-push-action/commit/03ba87f659416887991aaba33755dfc9c6ac952a))
+* add `allow` input for privileged entitlements (network.host, security.insecure, device)
+* add `ssh` input for SSH agent/socket forwarding
+* use GitHub API for major version tag updates (bypasses signature requirement)
+* simplify release-please config for cleaner branch names
+
 ## [2.1.0](https://github.com/omniproc/buildkit-build-push-action/compare/v2.0.0...v2.1.0) (2026-03-26)
 
 
