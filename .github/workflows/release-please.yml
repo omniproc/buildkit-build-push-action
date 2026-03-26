@@ -23,11 +23,6 @@ jobs:
           release-type: node
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
 
-      - uses: actions/checkout@v6
-        if: ${{ steps.release.outputs.release_created }}
-        with:
-          fetch-depth: 0
-
       - name: Update major version tag
         if: ${{ steps.release.outputs.release_created }}
         env:
