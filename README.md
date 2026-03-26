@@ -43,7 +43,7 @@ jobs:
     steps: 
     - name: oci metadata
       id: meta
-      uses: docker/metadata-action@v5
+      uses: docker/metadata-action@v6
       with:
         images: |
           ghcr.io/${{ github.repository }}
@@ -51,7 +51,7 @@ jobs:
           type=sha,event=branch
           type=raw,value=latest,enable={{is_default_branch}}
     - name: oci build
-      uses: omniproc/buildkit-build-push-action@v1.0.0
+      uses: omniproc/buildkit-build-push-action@v2
       with:
           tags: ${{ steps.meta.outputs.tags }}
           addr: 'tcp://buildkitd:1234'
@@ -61,11 +61,14 @@ jobs:
 # Development
 
 ```bash
+# Install dependencies and update package-lock.json
+npm install
+
 # When a new version of this action is ready, use ncc to bundle it.
-ncc build src/index.js --license licenses.txt
-# Add everything to Git and tag the commit. The tag will be used as action version.
+npm run build
+
+# Add everything to Git and tag the commit using [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/). The version bump is managed by [release-please](https://github.com/googleapis/release-please-action).
 git add .
-git commit -m "Release vX.x"
-git tag -a -m "Release vX.x" vX.x
+git commit
 git push --follow-tags
 ```
