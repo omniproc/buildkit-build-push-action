@@ -74,6 +74,16 @@ inputs:
     description: 'Secret value exposed to the build. Format id=secretname,src=filepath'
     required: false
     default: ''
+  # String-Array: YAML multiline string as block scalar (literal) using newline block chomping (clip)
+  allow:
+    description: 'Allow extra privileged entitlement, e.g. network.host, security.insecure, device'
+    required: false
+    default: ''
+  # String-Array: YAML multiline string as block scalar (literal) using newline block chomping (clip)
+  ssh:
+    description: 'Allow forwarding SSH agent or a raw Unix socket to the builder. Format default|<id>[=<socket>[,raw=false]|<key>[,<key>]]'
+    required: false
+    default: ''
   # String
   registry-auth-tlscontext:
     description: 'Overwrite TLS configuration when authenticating with registries, e.g. --registry-auth-tlscontext host=https://myserver:2376,insecure=false,ca=/path/to/my/ca.crt,cert=/path/to/my/cert.crt,key=/path/to/my/key.crt'

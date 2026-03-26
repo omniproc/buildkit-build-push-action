@@ -7,7 +7,7 @@ jobs:
   test-dryrun:
     runs-on: ubuntu-22.04
     container:
-      image: ghcr.io/omniproc/act-buildkit-runner:1.0.0
+      image: ghcr.io/omniproc/act-buildkit-runner:0.28.1
     steps:
       - uses: actions/checkout@v6
 
@@ -31,7 +31,7 @@ jobs:
   test-with-cache:
     runs-on: ubuntu-22.04
     container:
-      image: ghcr.io/omniproc/act-buildkit-runner:1.0.0
+      image: ghcr.io/omniproc/act-buildkit-runner:0.28.1
     steps:
       - uses: actions/checkout@v6
 

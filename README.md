@@ -4,7 +4,7 @@ A minimally opinionated GitHub action for BuildKit's [`buildctl`](https://github
 
 # Requirements
 
-- BuildKit's `buildctl` ~=v0.15.1 has to be available in the path of the action runner, e.g. [act-buildkit-runner](https://github.com/omniproc/act-buildkit-runner).
+- BuildKit's `buildctl` ~=v0.28.1 has to be available in the path of the action runner, e.g. [act-buildkit-runner](https://github.com/omniproc/act-buildkit-runner).
 
 # Inputs
 
@@ -23,6 +23,8 @@ A minimally opinionated GitHub action for BuildKit's [`buildctl`](https://github
 | `export-cache`              | No       | String  | Export build cache                                                               | `type=registry,ref=ghcr.io/${{ github.repository }}:buildcache,mode=max,push=true`                                  |
 | `import-cache`              | No       | String  | Import build cache                                                               | `type=registry,ref=ghcr.io/${{ github.repository }}:buildcache`                                                     |
 | `secret`                    | No       | List    | Secret value exposed to the build                                                | <pre> secret: \| <br>&emsp;id=foo,src=/path/to/foo<br>&emsp;id=bar,src=/path/to/bar<br></pre>                       |
+| `allow`                     | No       | List    | Allow extra privileged entitlement                                               | <pre> allow: \| <br>&emsp;network.host<br>&emsp;security.insecure<br></pre>                                         |
+| `ssh`                       | No       | List    | Allow forwarding SSH agent or socket to the builder                              | <pre> ssh: \| <br>&emsp;default<br>&emsp;key=$HOME/.ssh/id_rsa<br></pre>                                            |
 | `registry-auth-tls-context` | No       | String  | Overwrite TLS configuration when authenticating with registries                  | `host=https://myserver:2376,insecure=false,ca=/path/to/my/ca.crt,cert=/path/to/my/cert.crt,key=/path/to/my/key.crt` |
 | `tags`                      | Yes      | List    | Image tags extending the `name`s used in the `output` input                      | <pre> tags: \| <br>&emsp;{{ github.repository }}:sha-ca56cb6<br>&emsp;{{ github.repository }}:latest<br></pre>      |
 | `dryrun`                    | No       | Boolean | Only print the resulting `buildctl` command but do not actually execute it       | `false`                                                                                                             |
@@ -39,7 +41,7 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     container:
-      image: ghcr.io/omniproc/act-buildkit-runner:1.0.0
+      image: ghcr.io/omniproc/act-buildkit-runner:0.28.1
     steps: 
     - name: oci metadata
       id: meta
