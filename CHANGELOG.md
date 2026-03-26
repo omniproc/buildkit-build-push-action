@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.1.0](https://github.com/omniproc/buildkit-build-push-action/compare/v2.0.0...v2.1.0) (2026-03-26)
+
+
+### Features
+
+* update to BuildKit v0.28.1 ([4182efe](https://github.com/omniproc/buildkit-build-push-action/commit/4182efe16c96a9ab97538ed541674e88fa02571d))
+* update to BuildKit v0.28.1 ([14f4b95](https://github.com/omniproc/buildkit-build-push-action/commit/14f4b95384fd67c6cbbbbf566f671e0bd584324d))
+
 ## [2.0.0](https://github.com/omniproc/buildkit-build-push-action/compare/v1.1.0...v2.0.0) (2026-03-26)
 
 

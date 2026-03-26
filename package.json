@@ -1,6 +1,6 @@
 {
   "name": "buildkit-build-push-action",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "A opinionated GitHub action for BuildKit's [`buildctl`](https://github.com/moby/buildkit/blob/master/docs/reference/buildctl.md).",
   "type": "module",
   "main": "index.js",
