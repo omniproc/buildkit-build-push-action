@@ -1,5 +1,5 @@
-const core = require('@actions/core');
-const exec = require('@actions/exec');
+import * as core from '@actions/core';
+import * as exec from '@actions/exec';
 
 function transformInputKey(key) {
   // Replace underscores with dashes
@@ -82,10 +82,10 @@ async function run() {
     // Build the command to be executed
     // Construct the output string based on the output input and optional tags
     const output = `--output ${extendName(_output, _tags)}`;
-    const arguments = [`${debug}`, `${addr}`, `${log_format}`, `${tlsdir}`, 'build', `${output}`, `${progress}`, `${local}`, `${frontend}`, `${opt}`, `${no_cache}`, `${export_cache}`, `${import_cache}`, `${secret}`, `${registry_auth_tls_context}`].filter(arg => arg !== '');
+    const args = [`${debug}`, `${addr}`, `${log_format}`, `${tlsdir}`, 'build', `${output}`, `${progress}`, `${local}`, `${frontend}`, `${opt}`, `${no_cache}`, `${export_cache}`, `${import_cache}`, `${secret}`, `${registry_auth_tls_context}`].filter(arg => arg !== '');
 
     // When logging to console print the command as it is actually executed including it's \" escape sequences
-    const _arguments = arguments.join(' ').replace(/\"/g, '\\\"');
+    const _arguments = args.join(' ').replace(/\\/g, '\\\\').replace(/"/g, '\\"');
 
     if (_dryrun === true) {
       console.log('Dryrun flag set. Command will be logged but not executed.')
@@ -95,7 +95,7 @@ async function run() {
       console.log('Executing buildctl command...');
       // Log the command to be executed. exec.exec() does log the command itself BUT does some funny escaping after the fact. The actually executed command is not properly logged by exec.exec(). Thus we log it here for better visibility of what is actually executed.
       console.log(`buildctl ${_arguments}`);
-      await exec.exec('buildctl', arguments.map(str => str.split(' ')).flat());
+      await exec.exec('buildctl', args.map(str => str.split(' ')).flat());
       console.log('Buildctl command succeeded (exit status 0).');
     }
   }
