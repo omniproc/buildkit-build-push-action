@@ -30998,18 +30998,18 @@ async function run() {
       ...registryAuthTlscontext,
     ];
 
-    // When logging to console print the command as it is actually executed including its \" escape sequences
-    const formattedArgs = args.join(' ').replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+    // Log the command as space-separated args
+    const formattedCmd = `buildctl ${args.join(' ')}`;
 
     if (dryrun) {
       console.log('Dryrun flag set. Command will be logged but not executed.');
-      console.log(`buildctl ${formattedArgs}`);
+      console.log(formattedCmd);
     } else {
       console.log('Executing buildctl command...');
       // Log the command to be executed. exec.exec() does log the command itself BUT does some funny
       // escaping after the fact. The actually executed command is not properly logged by exec.exec().
       // Thus we log it here for better visibility of what is actually executed.
-      console.log(`buildctl ${formattedArgs}`);
+      console.log(formattedCmd);
       await exec_exec('buildctl', args);
       console.log('Buildctl command succeeded (exit status 0).');
     }

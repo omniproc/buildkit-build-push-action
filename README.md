@@ -62,6 +62,18 @@ jobs:
 
 # Development
 
+## Updating the BuildKit / Runner Version
+
+This action's tests run inside the [act-buildkit-runner](https://github.com/omniproc/act-buildkit-runner) container. When a new runner version is published (tracking a new BuildKit release):
+
+1. Update the runner image tag in `.github/workflows/tests.yaml` (both jobs).
+2. Update the version in the Requirements section and Example below.
+3. Commit, push, and verify tests pass.
+
+See [.github/workflows/README.md](.github/workflows/README.md) for workflow details.
+
+## Making Changes
+
 ```bash
 # Install dependencies and update package-lock.json
 npm install
