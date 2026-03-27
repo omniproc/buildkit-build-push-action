@@ -8,6 +8,8 @@ on:
 permissions:
   contents: read
 
+# NOTE: Update the runner image tag in both jobs when upgrading BuildKit.
+# See .github/workflows/README.md for details.
 jobs:
   test-dryrun:
     runs-on: ubuntu-22.04
