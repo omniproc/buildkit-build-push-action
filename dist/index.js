@@ -27910,12 +27910,39 @@ module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("util");
 /******/ }
 /******/ 
 /************************************************************************/
+/******/ /* webpack/runtime/define property getters */
+/******/ (() => {
+/******/ 	// define getter functions for harmony exports
+/******/ 	__nccwpck_require__.d = (exports, definition) => {
+/******/ 		for(var key in definition) {
+/******/ 			if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			}
+/******/ 		}
+/******/ 	};
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/hasOwnProperty shorthand */
+/******/ (() => {
+/******/ 	__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ })();
+/******/ 
 /******/ /* webpack/runtime/compat */
 /******/ 
 /******/ if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = new URL('.', import.meta.url).pathname.slice(import.meta.url.match(/^file:\/\/\/\w:/) ? 1 : 0, -1) + "/";
 /******/ 
 /************************************************************************/
 var __webpack_exports__ = {};
+
+// EXPORTS
+__nccwpck_require__.d(__webpack_exports__, {
+  s2: () => (/* binding */ extendName),
+  cH: () => (/* binding */ getArrayInput),
+  Vt: () => (/* binding */ src_getBooleanInput),
+  gQ: () => (/* binding */ getStringInput),
+  eF: () => (/* binding */ run),
+  KI: () => (/* binding */ transformInputKey)
+});
 
 ;// CONCATENATED MODULE: external "os"
 const external_os_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("os");
@@ -30866,32 +30893,36 @@ function getIDToken(aud) {
 
 
 
+// Replace underscores with dashes to map JS variable names to CLI flag names
 function transformInputKey(key) {
-  // Replace underscores with dashes
   return key.replace(/_/g, '-');
 }
 
+// Return ['--key', 'value'] if the input is non-empty, otherwise []
 function getStringInput(key, required = false) {
-  // Return the input value prefixed by the key
-  if (getInput(transformInputKey(key), { required: required }).length !== 0) {
-    return `--${transformInputKey(key)} ${getInput(transformInputKey(key))}`;
-  }
-  return ''
+  const flag = transformInputKey(key);
+  const value = getInput(flag, { required });
+  if (value.length === 0) return [];
+  return [`--${flag}`, value];
 }
 
+// Return ['--key'] if the input is true, otherwise []
 function src_getBooleanInput(key, required = false) {
-  // Return the key if the input is true, otherwise return an empty string
-  if (getBooleanInput(transformInputKey(key), { required: required }) === true) {
-    return `--${transformInputKey(key)}`
-  }
-  return ''
+  const flag = transformInputKey(key);
+  if (getBooleanInput(flag, { required })) return [`--${flag}`];
+  return [];
 }
 
+// Return ['--key', 'elem1', '--key', 'elem2', ...] for each line of multiline input, otherwise []
 function getArrayInput(key, required = false) {
-  // Return the key with each element of the input array prefixed by the key
-  return getMultilineInput(key, { required: required }).map(element => `--${transformInputKey(key)} ${element}`).join(' ');
+  const flag = transformInputKey(key);
+  return getMultilineInput(flag, { required }).flatMap(element => [`--${flag}`, element]);
 }
 
+// Extend or create the name= part of an output string with additional image tags.
+// Wraps names in escaped quotes for buildctl: type=image,push=true,\"name=...\"
+// The arguments provided to the exec.exec() function are escaped by _uvQuoteCmdArg() in the toolkit, see:
+// https://github.com/actions/toolkit/blob/af45ad8eaa9ccbb742e6c2967385a85becf6527a/packages/exec/src/toolrunner.ts#L276
 function extendName(inputString, additionalNames) {
   const parts = inputString.split(',');
 
@@ -30901,21 +30932,14 @@ function extendName(inputString, additionalNames) {
   if (namePartIndex === -1) {
     // If 'name=' part is not found, create a new one with the additional names
     const extendedNames = additionalNames.join(',');
-    // Wrap the extended names in escaped quotes, the result buildctl expects looks like this: type=image,push=true,\"name=...\"
-    // The arguments provided to the exec.exec() function are escaped by _uvQuoteCmdArg() in the toolkit, see:
-    // https://github.com/actions/toolkit/blob/af45ad8eaa9ccbb742e6c2967385a85becf6527a/packages/exec/src/toolrunner.ts#L276
     parts.push(`\"name=${extendedNames}\"`);
   } else {
-    // Extract the current name value
-    const namePart = parts[namePartIndex];
-    const currentNames = namePart.split('=')[1];
-    // Extend the name value with additional names
+    // Extract the current name value and extend it with additional names
+    const currentNames = parts[namePartIndex].split('=')[1];
     const extendedNames = [currentNames, ...additionalNames].join(',');
-    // Wrap the extended names in escaped quotes, the result buildctl expects looks like this: type=image,push=true,\"name=...\"
-    // The arguments provided to the exec.exec() function are escaped by _uvQuoteCmdArg() in the toolkit, see:
-    // https://github.com/actions/toolkit/blob/af45ad8eaa9ccbb742e6c2967385a85becf6527a/packages/exec/src/toolrunner.ts#L276
     parts[namePartIndex] = `\"name=${extendedNames}\"`;
   }
+
   // Join the parts back into a single string
   return parts.join(',');
 }
@@ -30923,50 +30947,82 @@ function extendName(inputString, additionalNames) {
 async function run() {
   try {
     // Get the input parameters
-    // variable names equal command parameter names with dashes replaced by underscores
-    // ----- buildctl global -----
+    // Variable names use underscores which transformInputKey converts to dashes
+    // matching the action.yml input names and buildctl CLI flags
+    // ----- buildctl global flags -----
     const debug = src_getBooleanInput('debug');
     const addr = getStringInput('addr', true);
-    const log_format = getStringInput('log_format');
+    const logFormat = getStringInput('log_format');
     const tlsdir = getStringInput('tlsdir');
-    // ----- build command -----
-    const _output = getInput('output', { required: true });
+
+    // ----- build command flags -----
+    const rawOutput = getInput('output', { required: true });
     const progress = getStringInput('progress');
     const local = getArrayInput('local');
     const frontend = getStringInput('frontend');
     const opt = getArrayInput('opt');
-    const no_cache = src_getBooleanInput('no_cache');
-    const export_cache = getStringInput('export_cache');
-    const import_cache = getStringInput('import_cache');
+    const noCache = src_getBooleanInput('no_cache');
+    const exportCache = getStringInput('export_cache');
+    const importCache = getStringInput('import_cache');
     const secret = getArrayInput('secret');
-    const registry_auth_tls_context = getStringInput('registry_auth_tls_context');
+    const allow = getArrayInput('allow');
+    const ssh = getArrayInput('ssh');
+    const registryAuthTlscontext = getStringInput('registry_auth_tlscontext');
+
     // ----- action ux -----
-    const _tags = getMultilineInput('tags', { required: true });
-    const _dryrun = getBooleanInput('dryrun');
+    const tags = getMultilineInput('tags', { required: true });
+    const dryrun = getBooleanInput('dryrun');
 
     // Build the command to be executed
     // Construct the output string based on the output input and optional tags
-    const output = `--output ${extendName(_output, _tags)}`;
-    const args = [`${debug}`, `${addr}`, `${log_format}`, `${tlsdir}`, 'build', `${output}`, `${progress}`, `${local}`, `${frontend}`, `${opt}`, `${no_cache}`, `${export_cache}`, `${import_cache}`, `${secret}`, `${registry_auth_tls_context}`].filter(arg => arg !== '');
+    const output = ['--output', extendName(rawOutput, tags)];
 
-    // When logging to console print the command as it is actually executed including it's \" escape sequences
-    const _arguments = args.join(' ').replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+    // Build the full argument list as a proper array
+    const args = [
+      ...debug,
+      ...addr,
+      ...logFormat,
+      ...tlsdir,
+      'build',
+      ...output,
+      ...progress,
+      ...local,
+      ...frontend,
+      ...opt,
+      ...noCache,
+      ...exportCache,
+      ...importCache,
+      ...secret,
+      ...allow,
+      ...ssh,
+      ...registryAuthTlscontext,
+    ];
 
-    if (_dryrun === true) {
-      console.log('Dryrun flag set. Command will be logged but not executed.')
-      console.log(`buildctl ${_arguments}`);
-    }
-    else {
+    // Log the command as space-separated args
+    const formattedCmd = `buildctl ${args.join(' ')}`;
+
+    if (dryrun) {
+      console.log('Dryrun flag set. Command will be logged but not executed.');
+      console.log(formattedCmd);
+    } else {
       console.log('Executing buildctl command...');
-      // Log the command to be executed. exec.exec() does log the command itself BUT does some funny escaping after the fact. The actually executed command is not properly logged by exec.exec(). Thus we log it here for better visibility of what is actually executed.
-      console.log(`buildctl ${_arguments}`);
-      await exec_exec('buildctl', args.map(str => str.split(' ')).flat());
+      // Log the command to be executed. exec.exec() does log the command itself BUT does some funny
+      // escaping after the fact. The actually executed command is not properly logged by exec.exec().
+      // Thus we log it here for better visibility of what is actually executed.
+      console.log(formattedCmd);
+      await exec_exec('buildctl', args);
       console.log('Buildctl command succeeded (exit status 0).');
     }
-  }
-  catch (error) {
+  } catch (error) {
     setFailed(error.message);
   }
 }
 
 run();
+var __webpack_exports__extendName = __webpack_exports__.s2;
+var __webpack_exports__getArrayInput = __webpack_exports__.cH;
+var __webpack_exports__getBooleanInput = __webpack_exports__.Vt;
+var __webpack_exports__getStringInput = __webpack_exports__.gQ;
+var __webpack_exports__run = __webpack_exports__.eF;
+var __webpack_exports__transformInputKey = __webpack_exports__.KI;
+export { __webpack_exports__extendName as extendName, __webpack_exports__getArrayInput as getArrayInput, __webpack_exports__getBooleanInput as getBooleanInput, __webpack_exports__getStringInput as getStringInput, __webpack_exports__run as run, __webpack_exports__transformInputKey as transformInputKey };
