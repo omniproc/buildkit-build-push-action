@@ -55,9 +55,9 @@ jobs:
     - name: oci build
       uses: omniproc/buildkit-build-push-action@v2
       with:
-          tags: ${{ steps.meta.outputs.tags }}
-          addr: 'tcp://buildkitd:1234'
-          output: 'type=image,push=false'
+        tags: ${{ steps.meta.outputs.tags }}
+        addr: 'tcp://buildkitd:1234'
+        output: 'type=image,push=false'
 ```
 
 # Development
