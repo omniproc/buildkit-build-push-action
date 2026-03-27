@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.1.0](https://github.com/omniproc/buildkit-build-push-action/compare/v2.0.0...v2.1.0) (2026-03-27)
+
+
+### Features
+
+* update to BuildKit v0.28.1 and add allow and ssh inputs ([7683402](https://github.com/omniproc/buildkit-build-push-action/commit/76834029c114724c3f9d36822b3086a7a8907586))
+
+
+### Bug Fixes
+
+* improve code quality, fix registry-auth-tlscontext, and clean up ([ca29e44](https://github.com/omniproc/buildkit-build-push-action/commit/ca29e441271f99ee3aec72bfe6e922d94a1c544c))
+
 ## [2.0.0](https://github.com/omniproc/buildkit-build-push-action/compare/v1.1.0...v2.0.0) (2026-03-26)
 
 
