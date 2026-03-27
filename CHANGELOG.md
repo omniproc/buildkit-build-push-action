@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.3](https://github.com/omniproc/buildkit-build-push-action/compare/v2.2.2...v2.2.3) (2026-03-27)
+
+
+### Bug Fixes
+
+* correct license field in package.json from ISC to MIT ([bb0116b](https://github.com/omniproc/buildkit-build-push-action/commit/bb0116b7ff4e851269222719313e11ea91ab0be6))
+
 ## [2.2.2](https://github.com/omniproc/buildkit-build-push-action/compare/v2.2.1...v2.2.2) (2026-03-27)
 
 
