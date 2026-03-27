@@ -32,6 +32,14 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           addr: 'tcp://buildkitd:1234'
           output: 'type=image,push=false'
+          log-format: 'text'
+          no-cache: 'true'
+          secret: |
+            id=mysecret,src=/dev/null
+          allow: |
+            network.host
+          ssh: |
+            default
 
   test-with-cache:
     runs-on: ubuntu-22.04
