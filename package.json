@@ -3,7 +3,7 @@
   "version": "2.2.1",
   "description": "A opinionated GitHub action for BuildKit's [`buildctl`](https://github.com/moby/buildkit/blob/master/docs/reference/buildctl.md).",
   "type": "module",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "ncc build src/index.js --license licenses.txt",
     "test": "echo \"Error: no test specified\" && exit 1"
