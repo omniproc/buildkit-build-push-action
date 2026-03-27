@@ -2,8 +2,8 @@ name: 'Buildkit Buildctl'
 description: 'Build container image using buildkits buildctl'
 author: 'Robert Ruf'
 branding:
-  icon: 'bold'
-  color: 'yellow'
+  icon: 'package'
+  color: 'orange'
 inputs:
   # ----- buildctl global -----
   # Boolean: 'true' or 'false'
@@ -29,7 +29,6 @@ inputs:
   output:
     description: 'Define exports for build result, e.g. --output type=image,name=docker.io/username/image,push=true'
     required: true
-    default: ''
   # String
   progress:
     description: 'Set type of progress (auto, plain, tty, rawjson). Use plain to show container output'
@@ -74,6 +73,16 @@ inputs:
     description: 'Secret value exposed to the build. Format id=secretname,src=filepath'
     required: false
     default: ''
+  # String-Array: YAML multiline string as block scalar (literal) using newline block chomping (clip)
+  allow:
+    description: 'Allow extra privileged entitlement, e.g. network.host, security.insecure, device'
+    required: false
+    default: ''
+  # String-Array: YAML multiline string as block scalar (literal) using newline block chomping (clip)
+  ssh:
+    description: 'Allow forwarding SSH agent or a raw Unix socket to the builder. Format default|<id>[=<socket>[,raw=false]|<key>[,<key>]]'
+    required: false
+    default: ''
   # String
   registry-auth-tlscontext:
     description: 'Overwrite TLS configuration when authenticating with registries, e.g. --registry-auth-tlscontext host=https://myserver:2376,insecure=false,ca=/path/to/my/ca.crt,cert=/path/to/my/cert.crt,key=/path/to/my/key.crt'
@@ -84,7 +93,6 @@ inputs:
   tags:
     description: 'Image tags extending the tags used with the output command'
     required: true
-    default: ''
   # Boolean: 'true' or 'false'
   dryrun:
     description: 'Only output the buildctl command but do not actually execute it'

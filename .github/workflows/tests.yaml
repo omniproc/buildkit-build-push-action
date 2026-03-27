@@ -1,13 +1,20 @@
 name: Tests
 on:
   push:
+    branches:
+      - main
   pull_request:
 
+permissions:
+  contents: read
+
+# NOTE: Update the runner image tag in both jobs when upgrading BuildKit.
+# See .github/workflows/README.md for details.
 jobs:
   test-dryrun:
     runs-on: ubuntu-22.04
     container:
-      image: ghcr.io/omniproc/act-buildkit-runner:1.0.0
+      image: ghcr.io/omniproc/act-buildkit-runner:0.28.1
     steps:
       - uses: actions/checkout@v6
 
@@ -27,11 +34,19 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           addr: 'tcp://buildkitd:1234'
           output: 'type=image,push=false'
+          log-format: 'text'
+          no-cache: 'true'
+          secret: |
+            id=mysecret,src=/dev/null
+          allow: |
+            network.host
+          ssh: |
+            default
 
   test-with-cache:
     runs-on: ubuntu-22.04
     container:
-      image: ghcr.io/omniproc/act-buildkit-runner:1.0.0
+      image: ghcr.io/omniproc/act-buildkit-runner:0.28.1
     steps:
       - uses: actions/checkout@v6
 
