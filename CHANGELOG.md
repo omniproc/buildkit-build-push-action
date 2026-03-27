@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.2](https://github.com/omniproc/buildkit-build-push-action/compare/v2.2.1...v2.2.2) (2026-03-27)
+
+
+### Bug Fixes
+
+* enforce required inputs and minor cleanups ([878f3d9](https://github.com/omniproc/buildkit-build-push-action/commit/878f3d99b9ff8bb71abdaa5847843bc6eb2ba524))
+
 ## [2.2.1](https://github.com/omniproc/buildkit-build-push-action/compare/v2.2.0...v2.2.1) (2026-03-26)
 
 
