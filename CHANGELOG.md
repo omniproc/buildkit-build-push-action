@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.2.1](https://github.com/omniproc/buildkit-build-push-action/compare/v2.2.0...v2.2.1) (2026-03-26)
+
+
+### Bug Fixes
+
+* correct registry-auth-tlscontext input name and unify README ([7c9cd86](https://github.com/omniproc/buildkit-build-push-action/commit/7c9cd8660295b9ab4ed75f0cbe116b1d3700fc70))
+* correct registry-auth-tlscontext input name and unify README ([007aff6](https://github.com/omniproc/buildkit-build-push-action/commit/007aff6b53252e3107d96af825b640b00e166645))
+
 ## [2.2.0](https://github.com/omniproc/buildkit-build-push-action/compare/v2.1.0...v2.2.0) (2026-03-26)
 
 
