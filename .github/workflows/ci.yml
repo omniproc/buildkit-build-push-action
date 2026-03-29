@@ -32,7 +32,7 @@ jobs:
             type=sha,event=branch
             type=raw,value=latest
 
-      - name: Test action (dryrun)
+      - name: Dryrun build
         uses: ./
         with:
           dryrun: 'true'
@@ -48,7 +48,7 @@ jobs:
           ssh: |
             default
 
-  test-with-cache:
+  test-cache:
     runs-on: ubuntu-24.04
     container:
       image: ghcr.io/omniproc/act-buildkit-runner:0.28.1
@@ -65,7 +65,7 @@ jobs:
             type=sha,event=branch
             type=raw,value=latest
 
-      - name: Test action with cache options (dryrun)
+      - name: Dryrun build with cache
         uses: ./
         with:
           dryrun: 'true'
