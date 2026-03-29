@@ -39,7 +39,7 @@ on:
   push
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     container:
       image: ghcr.io/omniproc/act-buildkit-runner:0.28.1
     steps: 
@@ -66,7 +66,7 @@ jobs:
 
 This action's tests run inside the [act-buildkit-runner](https://github.com/omniproc/act-buildkit-runner) container. When a new runner version is published (tracking a new BuildKit release):
 
-1. Update the runner image tag in `.github/workflows/tests.yaml` (both jobs).
+1. Update the runner image tag in `.github/workflows/ci.yml` (both jobs).
 2. Update the version in the Requirements section and Example below.
 3. Commit, push, and verify tests pass.
 
