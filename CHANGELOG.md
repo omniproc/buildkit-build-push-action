@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/omniproc/buildkit-build-push-action/compare/v2.1.0...v2.1.1) (2026-03-29)
+
+
+### Bug Fixes
+
+* use exact ref match for major version tag update ([c628ddf](https://github.com/omniproc/buildkit-build-push-action/commit/c628ddf311d746c27b27897ac5251815bec5ac48))
+
 ## [2.1.0](https://github.com/omniproc/buildkit-build-push-action/compare/v2.0.0...v2.1.0) (2026-03-27)
 
 
