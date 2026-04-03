@@ -1,3 +1,6 @@
+# Runs the action in dryrun mode inside the act-buildkit-runner container
+# to verify the CLI flag assembly and option handling without a real buildkitd.
+# A successful run on main gates the Release workflow.
 name: CI
 run-name: CI / ${{ github.event_name }}
 
@@ -10,11 +13,14 @@ on:
 permissions:
   contents: read
 
+# Cancel older runs for the same branch/PR to save runner minutes.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  # Exercises all core inputs (tags, addr, output, secrets, allow, ssh)
+  # in dryrun mode to verify the buildctl command is assembled correctly.
   test-dryrun:
     runs-on: ubuntu-24.04
     container:
@@ -48,6 +54,8 @@ jobs:
           ssh: |
             default
 
+  # Exercises cache-related inputs (export-cache, import-cache) in dryrun
+  # mode to verify they are correctly wired into the buildctl command.
   test-with-cache:
     runs-on: ubuntu-24.04
     container:

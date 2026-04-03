@@ -1,7 +1,12 @@
+# Runs release-please after CI passes on main to automate versioning and
+# changelog generation. When a release is created, updates the major version
+# tag (e.g. v1) so consumers using `uses: omniproc/buildkit-build-push-action@v1`
+# always get the latest patch.
 name: Release
 run-name: Release
 
 on:
+  # Triggered automatically when CI completes on main.
   workflow_run:
     workflows: ["CI"]
     types:
@@ -9,6 +14,7 @@ on:
     branches:
       - main
 
+# Queue (don't cancel) releases — each must run to completion.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
@@ -19,14 +25,20 @@ permissions:
 jobs:
   release-please:
     runs-on: ubuntu-24.04
+    # Only proceed if CI succeeded — failed or cancelled runs are ignored.
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
+      # App token is needed so release-please can create PRs, releases, and tags
+      # that trigger downstream workflows (the default GITHUB_TOKEN doesn't fire events).
       - name: Generate App token
         uses: actions/create-github-app-token@v3
         id: app-token
         with:
           app-id: ${{ vars.RELEASE_APP_ID }}
           private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+
+      # release-please reads conventional commits to decide whether to bump
+      # the version, update the changelog, or create a release.
       - name: Run release-please
         uses: googleapis/release-please-action@v4
         id: release
@@ -34,6 +46,8 @@ jobs:
           release-type: node
           token: ${{ steps.app-token.outputs.token }}
 
+      # Move the major version tag (e.g. v1) to the new release SHA.
+      # This allows consumers to pin `@v1` and automatically receive patches.
       - name: Update major version tag
         if: ${{ steps.release.outputs.release_created }}
         env:
@@ -43,8 +57,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          
-          # Check if tag exists (use singular /ref/ for exact match, not /refs/ which does prefix matching)
+
+          # Use singular /ref/ for exact match (not /refs/ which does prefix matching).
           if gh api "repos/${{ github.repository }}/git/ref/tags/v${MAJOR}" &>/dev/null; then
             echo "Updating existing v${MAJOR} tag to ${SHA}"
             gh api "repos/${{ github.repository }}/git/ref/tags/v${MAJOR}" \
