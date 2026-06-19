@@ -21,7 +21,7 @@ jobs:
       image: ghcr.io/omniproc/act-buildkit-runner:0.28.1
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: OCI metadata
         id: meta
@@ -54,7 +54,7 @@ jobs:
       image: ghcr.io/omniproc/act-buildkit-runner:0.28.1
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: OCI metadata
         id: meta
